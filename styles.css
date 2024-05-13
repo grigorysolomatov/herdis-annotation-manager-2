@@ -1,0 +1,86 @@
+body {
+    color: #fff;
+    background-color: #222;
+    cursor: default;
+}
+
+div.vstack {
+    display: flex;
+    flex-direction: column;
+}
+div.hstack {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+button {
+    background-color: #222;
+    padding: 5px;    
+    border-width: 1px;
+    border-radius: 3px;
+    border-color: #ccc;
+    color: #fff;
+    font-size: 15px;
+    margin: 5px;
+    transition: border-color 0.0s;
+    min-width: 85px;
+}
+button:hover {
+    border-color: #f80;
+    transition: border-color 0.0s;
+}
+
+img#image-view {
+    margin: 20px;
+    display: block;
+}
+
+input {
+    border-radius: 3px;
+    border-width: 1px;
+    color: #fff;
+    background-color: #333;
+    font-size: 18px;    
+    margin: 5px;
+    padding: 3px;
+    width: 300px;
+}
+
+input:focus {
+    outline: none;
+}
+
+#autocomplete {
+    border-radius: 3px;
+    border-width: 1px;    
+    color: #888;
+    position: absolute;
+    background-color: #333;
+}
+
+#autocomplete:not(:empty) {
+  border-style: solid;
+  border-color: #ff0;
+}
+
+.autoitem {
+    margin: 10px;
+}
+
+.autoselected {
+    color: #ff0;
+}
+
+.gray {
+    color: #aaa;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+td {
+    align-items: left;
+    padding-left: 20px;
+}

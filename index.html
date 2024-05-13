@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HAM</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="icon" href="imgs/favicon.ico" type="image/x-icon">
+  </head>
+  <body>
+    <button onclick="state.toPage('upload-page')">Upload</button>
+    <button onclick="state.toPage('annotate-page')">Annotate</button>
+    <button onclick="state.toPage('download-page')">Download</button>
+    <button onclick="state.toPage('tutorial-page')">Tutorial</button>
+    <!-- ------------------------------------------------------------------------->
+    <div class="page" id="annotate-page">            
+      <h2>Annotate</h2>
+      <span class="gray" id="image-count"></span>
+      <span class="gray" id="image-file-name"></span>
+      <div class="hstack">
+	<input id="class-input" value="">
+	<div>
+	  <div id="autocomplete" class="vstack"></div>
+	</div>
+      </div>      
+      <br>
+      <img id="image-view" alt="(no images uploaded)">      
+    </div>
+    <!-- ------------------------------------------------------------------------->  
+    <div class="page" id="upload-page">                
+      <h2> Upload </h2>      
+    
+    <input type="file" id="upload-images" onchange="state.uploadImages();"
+	   webkitdirectory directory multiple style="display: none;">
+    <button onclick="ui('upload-images').click()">Images</button>
+    
+    <input type="file" id="upload-annotations" onchange="state.uploadAnnotations();"
+	   style="display: none;">    
+    <button onclick="ui('upload-annotations').click()">Annotations</button>
+    </div>
+    <!-- ------------------------------------------------------------------------->  
+    <div class="page" id="download-page">            
+      <h2>Download</h2>
+      
+      <button onclick="state.downloadAnnotations()">Annotations</button>
+    </div>
+    <!-- ------------------------------------------------------------------------->  
+    <div class="page" id="tutorial-page">
+      <h2>Tutorial</h2>
+      <h3>Key bindings</h3>
+      <table>
+	<tr>
+	  <td><b>Tab</b></td>
+	  <td>Toggle suggestions</td>
+	</tr>
+	<tr>
+	  <td><b>Left</b></td>
+	  <td>Previous image</td>
+	</tr>
+	<tr>
+	  <td><b>Right</b></td>
+	  <td>Next image</td>
+	</tr>
+	<tr>
+	  <td><b>Enter</b></td>
+	  <td>Accept annotation</td>
+	</tr>
+      </table>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
