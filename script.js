@@ -172,11 +172,12 @@ class State {
 	this.autoIdx = (this.autoIdx + this.classes.size) % this.classes.size;
 	children[this.autoIdx].classList.add('autoselected');
 	
+	ui('class-input').classList.add('autoselected');
 	ui('class-input').value = children[this.autoIdx].textContent;
     }
     next() {
 	this.idx = Math.min(this.idx + 1, this.images.length-1);
-	this.updateImage();
+	this.updateImage();	
     }
     prev() {
 	this.idx = Math.max(this.idx - 1, 0);
