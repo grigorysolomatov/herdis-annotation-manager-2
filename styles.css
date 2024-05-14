@@ -27,7 +27,7 @@ button {
     min-width: 85px;
 }
 button:hover {
-    border-color: #f80;
+    border-color: #0f4;
     transition: border-color 0.0s;
 }
 
@@ -46,7 +46,6 @@ input {
     padding: 3px;
     width: 300px;
 }
-
 input:focus {
     outline: none;
 }
@@ -58,22 +57,12 @@ input:focus {
     position: absolute;
     background-color: #333;
 }
-
 #autocomplete:not(:empty) {
   border-style: solid;
   border-color: #ff0;
 }
-
 .autoitem {
     margin: 10px;
-}
-
-.autoselected {
-    color: #ff0;
-}
-
-.gray {
-    color: #aaa;
 }
 
 table {
@@ -83,4 +72,17 @@ table {
 td {
     align-items: left;
     padding-left: 20px;
+}
+
+.autoselected {
+    color: #ff0;
+}
+.annotated {
+    color: #0f4;
+}
+.newclass {
+    color: #ccc;
+}
+.gray {
+    color: #aaa;
 }

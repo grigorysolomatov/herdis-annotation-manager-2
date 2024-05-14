@@ -1,8 +1,11 @@
-// -----------------------------------------------------------------------------
 function ui(id) {
     return document.getElementById(id);
 }
-// -----------------------------------------------------------------------------
+function getColor(selector) {
+    var element = document.querySelector(selector);
+    var style = window.getComputedStyle(element);
+    return style.getPropertyValue('color');
+}
 class State {
     constructor(mainPage) {
 	this.idx = 0;
@@ -48,6 +51,7 @@ class State {
 	    }
 	});
     }
+    // Images ------------------------------------------------------------------
     uploadImages() {
 	const files = ui('upload-images').files;
 	this.images = Array.from(files).sort(
@@ -61,20 +65,19 @@ class State {
 	ui('image-view').src = URL.createObjectURL(image);
 	ui('image-file-name').textContent = image.name;
 	ui('image-count').textContent = `[${this.idx+1}/${this.images.length}]`;
-	ui('class-input').classList.remove('autoselected');
-	
+
 	if (this.annotations[image.name]) {
-	    ui('class-input').value = this.annotations[image.name];	   
-	    return;
+	    ui('class-input').value = this.annotations[image.name];
 	}
-	
-	const children = [...ui('autocomplete').children];
-	if (children.length === 0) {
+	else if (this.autoActive) {
+	    const children = [...ui('autocomplete').children];
+	    ui('class-input').value = children[this.autoIdx].textContent;
+	}
+	else if (!this.autoActive) {
 	    ui('class-input').value = '';
-	    return;
 	}
-	ui('class-input').classList.add('autoselected');
-	ui('class-input').value = children[this.autoIdx].textContent;	
+
+	this.colorClassInput();
     }
     annotateImage() {
 	if (this.images.length === 0) {return;}
@@ -103,6 +106,15 @@ class State {
 	
 	this.next();	
     }
+    next() {
+	this.idx = Math.min(this.idx + 1, this.images.length-1);
+	this.updateImage();	
+    }
+    prev() {
+	this.idx = Math.max(this.idx - 1, 0);
+	this.updateImage();
+    }
+    // Annotations -------------------------------------------------------------
     downloadAnnotations() {
 	const json = JSON.stringify(this.annotations);
 	const blob = new Blob([json], {type: "application/json"});
@@ -131,6 +143,7 @@ class State {
 	};
 	reader.readAsText(file);
     }
+    // Autocomplete ------------------------------------------------------------
     autoStart() {
 	if (this.images.length === 0) {return;}
 	const classes = [...this.classes];
@@ -148,17 +161,18 @@ class State {
 	this.autoActive = true;
 
 	const children = [...ui('autocomplete').children];
-	ui('class-input').classList.add('autoselected');
-	ui('class-input').value = children[this.autoIdx].textContent;	
+	ui('class-input').value = children[this.autoIdx].textContent;
+
+	this.colorClassInput();
     }
     autoStop() {
 	while (ui('autocomplete').firstChild) {
 	    ui('autocomplete').removeChild(ui('autocomplete').firstChild);
 	}
-	this.autoActive = false;
-
-	ui('class-input').classList.remove('autoselected');
+	
+	this.autoActive = false;	
 	ui('class-input').value = '';
+	this.colorClassInput();
     }
     autoChange(delta) {
 	if (!this.autoActive) {return;}
@@ -172,17 +186,11 @@ class State {
 	this.autoIdx = (this.autoIdx + this.classes.size) % this.classes.size;
 	children[this.autoIdx].classList.add('autoselected');
 	
-	ui('class-input').classList.add('autoselected');
 	ui('class-input').value = children[this.autoIdx].textContent;
+	
+	this.colorClassInput();
     }
-    next() {
-	this.idx = Math.min(this.idx + 1, this.images.length-1);
-	this.updateImage();	
-    }
-    prev() {
-	this.idx = Math.max(this.idx - 1, 0);
-	this.updateImage();
-    }
+    // Pages -------------------------------------------------------------------
     toPage(pageId) {
 	document.querySelectorAll('.page').forEach(page => {
 	    if (page.id !== pageId) {		
@@ -191,6 +199,21 @@ class State {
 	});
 	ui(pageId).style.display = 'block';
 	this.page = pageId;
+    }
+    // Other -------------------------------------------------------------------
+    colorClassInput() {
+	const value = ui('class-input').value;
+	const image = this.images[this.idx];
+		
+	if (value === this.annotations[image.name]) {
+	    ui('class-input').style.color = getColor('.annotated');
+	}
+	else if (this.classes.has(value)) {
+	    ui('class-input').style.color = getColor('.autoselected');
+	}
+	else {
+	    ui('class-input').style.color = getColor('.newclass');
+	}
     }
 }
 const state = new State('annotate-page');
