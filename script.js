@@ -6,12 +6,14 @@ function getColor(selector) {
     var style = window.getComputedStyle(element);
     return style.getPropertyValue('color');
 }
+
 class State {
     constructor(mainPage) {
 	this.idx = 0;
 	this.images = [];
 	this.annotations = {};
 	this.classes = new Set();
+	this.settings = null;
 
 	this.mainPage = mainPage;
 	this.page = mainPage;
@@ -51,7 +53,7 @@ class State {
 	    }
 	});
     }
-    // Images ------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     uploadImages() {
 	const files = ui('upload-images').files;
 	this.images = Array.from(files).sort(
@@ -114,9 +116,9 @@ class State {
 	this.idx = Math.max(this.idx - 1, 0);
 	this.updateImage();
     }
-    // Annotations -------------------------------------------------------------
+    // -------------------------------------------------------------------------
     downloadAnnotations() {
-	const json = JSON.stringify(this.annotations);
+	const json = JSON.stringify(this.annotations, null, 2);
 	const blob = new Blob([json], {type: "application/json"});
 	const url = URL.createObjectURL(blob);
 	const a = document.createElement('a');
@@ -143,7 +145,25 @@ class State {
 	};
 	reader.readAsText(file);
     }
-    // Autocomplete ------------------------------------------------------------
+    uploadConfig() {
+	const file = ui('upload-config').files[0];
+	
+	const reader = new FileReader();
+	reader.onload = (event) => {
+	    const contents = event.target.result;
+	    this.settings = JSON.parse(contents);
+	    this.classes = new Set([
+		...this.classes,
+		...this.settings.classes,
+	    ]);	    
+	    this.updateImage();
+	};
+	reader.onerror = (event) => {
+	    console.error("File could not be read! Code " + event.target.error.code);
+	};
+	reader.readAsText(file);
+    }
+    // -------------------------------------------------------------------------
     autoStart() {
 	if (this.images.length === 0) {return;}
 	const classes = [...this.classes];
@@ -190,7 +210,7 @@ class State {
 	
 	this.colorClassInput();
     }
-    // Pages -------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     toPage(pageId) {
 	document.querySelectorAll('.page').forEach(page => {
 	    if (page.id !== pageId) {		
@@ -200,7 +220,6 @@ class State {
 	ui(pageId).style.display = 'block';
 	this.page = pageId;
     }
-    // Other -------------------------------------------------------------------
     colorClassInput() {
 	const value = ui('class-input').value;
 	const image = this.images[this.idx];
