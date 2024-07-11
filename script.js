@@ -145,6 +145,25 @@ class State {
 	};
 	reader.readAsText(file);
     }
+    uploadClasses() {
+	const file = ui('upload-classes').files[0];
+	
+	const reader = new FileReader();
+	reader.onload = (event) => {
+	    const contents = event.target.result;
+	    const newClasses = JSON.parse(contents);
+	    console.log(newClasses)
+	    this.classes = new Set([
+		...this.classes,
+		...newClasses,
+	    ]);
+	    this.updateImage();
+	};
+	reader.onerror = (event) => {
+	    console.error("File could not be read! Code " + event.target.error.code);
+	};
+	reader.readAsText(file);
+    }
     uploadConfig() {
 	const file = ui('upload-config').files[0];
 	
