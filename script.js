@@ -212,7 +212,7 @@ class State {
 	const children = [...ui('autocomplete').children];
 
 	if (children.length > 0) {
-	    ui('class-input').value = children[this.autoIdx].textContent;
+	    ui('class-input').value = children[0].textContent;
 	}
 
 	this.colorClassInput();
