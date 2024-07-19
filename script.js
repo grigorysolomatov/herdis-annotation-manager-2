@@ -185,9 +185,16 @@ class State {
     // -------------------------------------------------------------------------
     autoStart() {
 	if (this.images.length === 0) {return;}
+	
 	const classes = [...this.classes];
-	classes.sort();	
-	classes.forEach((className, idx) => {
+	classes.sort();
+
+	// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	const classInput = ui('class-input').value;
+	const filteredClasses = classes.filter(className => className.startsWith(classInput));
+	// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++	
+		
+	filteredClasses.forEach((className, idx) => {
 	    const span = document.createElement("span");
 	    span.textContent = className;
 	    span.classList.add("autoitem");
@@ -197,10 +204,16 @@ class State {
 	    
 	    ui('autocomplete').appendChild(span);
 	});
+	
+	if (filteredClasses.length === 0) {return;} // Has to come after filteredClasses, duh...
+	
 	this.autoActive = true;
-
+	
 	const children = [...ui('autocomplete').children];
-	ui('class-input').value = children[this.autoIdx].textContent;
+
+	if (children.length > 0) {
+	    ui('class-input').value = children[this.autoIdx].textContent;
+	}
 
 	this.colorClassInput();
     }
